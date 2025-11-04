@@ -11,6 +11,12 @@
 /node_modules/
 /package-lock.json
 /yarn.lock
+.npm_cache/
+.npm-cache/
+# older variations (kept for compatibility)
+# .npm_cache
+# /.npm_cache
+
 
 # Environment files
 /.env
