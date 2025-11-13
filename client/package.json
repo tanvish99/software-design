@@ -1,53 +1,56 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "primeng-autocomplete-basic-demo",
+  "description": "PrimeNG AutocompleteBasicDemo",
+  "license": "MIT",
+  "keywords": [],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
-  },
-  "private": true,
   "dependencies": {
-    "@angular/animations": "^20.3.9",
-    "@angular/common": "^20.3.0",
-    "@angular/compiler": "^20.3.0",
-    "@angular/core": "^20.3.0",
-    "@angular/forms": "^20.3.0",
-    "@angular/platform-browser": "^20.3.0",
-    "@angular/router": "^20.3.0",
-    "@angular/service-worker": "^20.3.0",
-    "primeflex": "^4.0.0",
-    "primeicons": "^7.0.0",
-    "primeng": "^20.3.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
+    "@angular/animations": "^20.0.4",
+    "@angular/cdk": "^20.0.3",
+    "@angular/cli": "^20.0.3",
+    "@angular/common": "^20.0.4",
+    "@angular/compiler": "^20.0.4",
+    "@angular/core": "^20.0.4",
+    "@angular/forms": "^20.0.4",
+    "@angular/platform-browser": "^20.0.4",
+    "@angular/platform-browser-dynamic": "^20.0.4",
+    "@angular/router": "^20.0.4",
+    "@primeuix/themes": "latest",
+    "@types/jasmine": "4.3.1",
+    "@types/node": "22.9.0",
+    "chart.js": "4.4.2",
+    "primeicons": "latest",
+    "primeng": "20.3.0",
+    "quill": "2.0.2",
+    "rxjs": "~7.8.2",
+    "tailwindcss": "^3",
+    "tailwindcss-primeui": "latest",
+    "tslib": "^2.5.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.8",
-    "@angular/cli": "^20.3.8",
-    "@angular/compiler-cli": "^20.3.0",
-    "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.9.0",
-    "karma": "~6.4.0",
+    "@angular-devkit/build-angular": "^20.0.3",
+    "@angular/cli": "^20.0.3",
+    "@angular/compiler-cli": "^20.0.3",
+    "@angular/language-service": "^20.0.0",
+    "@types/jasmine": "~4.3.1",
+    "@types/node": "^22.9.0",
+    "codelyzer": "^0.0.28",
+    "jasmine-core": "~4.6.0",
+    "karma": "~6.4.2",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.2"
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "ts-node": "~10.9.2",
+    "typescript": "~5.8.3",
+    "tailwindcss": "^3.4.10",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41"
   }
 }
