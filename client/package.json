@@ -32,6 +32,8 @@
     "tailwindcss-primeui": "latest",
     "tslib": "^2.5.0",
     "zone.js": "~0.15.0"
+    ,
+    "@angular/service-worker": "^20.0.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.0.3",

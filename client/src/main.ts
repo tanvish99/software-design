@@ -1,4 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
+import { isDevMode } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
@@ -22,3 +23,10 @@ import { routes } from './app/app.routes';
     bootstrapApplication(App, appConfig).catch((err) =>
     console.error(err)
 );
+
+    // Register service worker in production builds
+    if ('serviceWorker' in navigator && !isDevMode()) {
+      navigator.serviceWorker.register('/ngsw-worker.js')
+        .then((reg) => console.log('Service worker registered:', reg.scope))
+        .catch((err) => console.error('Service worker registration failed:', err));
+    }
