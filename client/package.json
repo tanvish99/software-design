@@ -20,10 +20,13 @@
     "@angular/platform-browser": "^20.0.4",
     "@angular/platform-browser-dynamic": "^20.0.4",
     "@angular/router": "^20.0.4",
+    "@angular/service-worker": "^20.0.4",
     "@primeuix/themes": "latest",
     "@types/jasmine": "4.3.1",
     "@types/node": "22.9.0",
     "chart.js": "4.4.2",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "primeicons": "latest",
     "primeng": "20.3.0",
     "quill": "2.0.2",
@@ -32,8 +35,6 @@
     "tailwindcss-primeui": "latest",
     "tslib": "^2.5.0",
     "zone.js": "~0.15.0"
-    ,
-    "@angular/service-worker": "^20.0.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.0.3",
@@ -42,6 +43,7 @@
     "@angular/language-service": "^20.0.0",
     "@types/jasmine": "~4.3.1",
     "@types/node": "^22.9.0",
+    "autoprefixer": "^10.4.20",
     "codelyzer": "^0.0.28",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.2",
@@ -49,10 +51,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "ts-node": "~10.9.2",
-    "typescript": "~5.8.3",
+    "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.41"
+    "ts-node": "~10.9.2",
+    "typescript": "~5.8.3"
   }
 }

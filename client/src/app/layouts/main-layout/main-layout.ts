@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Header } from "../header/header";
-import { Dashboard } from "../dashboard/dashboard";
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, Header, RouterOutlet, Dashboard],
+  imports: [CommonModule, HeaderComponent, RouterOutlet],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
 })

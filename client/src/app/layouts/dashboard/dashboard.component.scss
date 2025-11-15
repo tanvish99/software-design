@@ -1,0 +1,4 @@
+/* Reduce card padding slightly for PWA mobile feel */
+:host ::ng-deep .p-card-body {
+  padding-top: 1rem;
+}

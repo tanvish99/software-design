@@ -1,0 +1,213 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="p-4 md:p-6 lg:p-8">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold mb-1">Transactions</h1>
+      <p class="text-sm text-muted-color">
+        Manage your income and expenses. Add, edit, or delete entries.
+      </p>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Add Transaction"
+      icon="pi pi-plus"
+      class="p-button-raised p-button-primary"
+      (click)="openAddDialog()">
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-surface-0 rounded-xl shadow-sm p-3 md:p-4">
+    <p-table
+      [value]="transactions"
+      dataKey="id"
+      [paginator]="true"
+      [rows]="5"
+      responsiveLayout="scroll"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      class="w-full">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Type</th>
+          <th>Category</th>
+          <th class="text-right">Amount</th>
+          <th>Date</th>
+          <th>Note</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-transaction>
+        <tr>
+          <td>
+            <p-tag
+              [value]="transaction.type === 'INCOME' ? 'Income' : 'Expense'"
+              [severity]="getTypeSeverity(transaction.type)">
+            </p-tag>
+          </td>
+
+          <td>{{ transaction.category }}</td>
+
+          <td class="text-right font-medium">
+            {{ transaction.amount | number:'1.2-2' }}
+          </td>
+
+          <td>
+            {{ transaction.date | date:'mediumDate' }}
+          </td>
+
+          <td class="max-w-[200px] truncate" [title]="transaction.note">
+            {{ transaction.note || '-' }}
+          </td>
+
+          <td class="text-center">
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button-text p-button-sm mr-2"
+              (click)="openEditDialog(transaction)">
+            </button>
+
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger p-button-sm"
+              (click)="confirmDelete(transaction)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-4">
+            No transactions found. Click <strong>Add Transaction</strong> to create one.
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <!-- Add/Edit Dialog -->
+  <p-dialog
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    [style]="{width: '90vw', maxWidth: '500px'}"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [breakpoints]="{ '960px': '90vw', '640px': '95vw' }">
+
+    <ng-template pTemplate="header">
+      <span class="text-lg font-semibold">{{ dialogTitle }}</span>
+    </ng-template>
+
+    <form [formGroup]="transactionForm" class="space-y-4 mt-2">
+      <!-- Type (uses p-select now) -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium">Type</label>
+        <p-select
+          formControlName="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select type"
+          class="w-full">
+        </p-select>
+        <small *ngIf="transactionForm.get('type')?.invalid && transactionForm.get('type')?.touched"
+               class="text-red-500">
+          Type is required.
+        </small>
+      </div>
+
+      <!-- Category (uses p-select now) -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium">Category</label>
+        <p-select
+          formControlName="category"
+          [options]="categoryOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select category"
+          class="w-full">
+        </p-select>
+        <small *ngIf="transactionForm.get('category')?.invalid && transactionForm.get('category')?.touched"
+               class="text-red-500">
+          Category is required.
+        </small>
+      </div>
+
+      <!-- Amount & Date -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium">Amount</label>
+          <p-inputNumber
+            formControlName="amount"
+            inputId="amount"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            class="w-full">
+          </p-inputNumber>
+          <small *ngIf="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched"
+                 class="text-red-500">
+            Amount must be at least 0.01.
+          </small>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium">Date</label>
+          <!-- ✅ DatePicker for reactive forms -->
+          <p-datepicker
+            formControlName="date"
+            [showIcon]="true"
+            dateFormat="yy-mm-dd"
+            class="w-full">
+          </p-datepicker>
+          <small *ngIf="transactionForm.get('date')?.invalid && transactionForm.get('date')?.touched"
+                 class="text-red-500">
+            Date is required.
+          </small>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium">Note (optional)</label>
+        <input
+          type="text"
+          pInputText
+          formControlName="note"
+          maxlength="200"
+          placeholder="Add a short note"
+          class="w-full" />
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2 w-full">
+        <button
+          pButton
+          type="button"
+          label="Cancel"
+          class="p-button-text"
+          (click)="dialogVisible = false">
+        </button>
+        <button
+          pButton
+          type="button"
+          label="Save"
+          icon="pi pi-check"
+          class="p-button-primary"
+          (click)="saveTransaction()">
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

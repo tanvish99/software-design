@@ -1,0 +1,14 @@
+/* Make PrimeNG table header slightly bolder (optional) */
+:host ::ng-deep .p-datatable-thead > tr > th {
+  font-weight: 600;
+}
+
+/* Adjust dialog body spacing on mobile if needed */
+:host ::ng-deep .p-dialog .p-dialog-content {
+  padding-top: 0.75rem;
+}
+
+/* Ensure tag text a bit smaller to look neat in table */
+:host ::ng-deep .p-tag {
+  font-size: 0.75rem;
+}

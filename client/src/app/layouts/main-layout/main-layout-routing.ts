@@ -1,15 +1,19 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './main-layout';
-import { Dashboard } from '../dashboard/dashboard';
-
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { TransactionsComponent } from 'src/app/transactions/transactions.component';
+import { BudgetsComponent } from 'src/app/budgets/budgets.component';
 
 export const MainLayoutRoutes: Routes = [
     {
       path: '',
       component: MainLayout,
       children: [
+          { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
-          { path: 'dashboard', component: Dashboard}
+          { path: 'dashboard', component: DashboardComponent},
+          { path: 'transactions', component: TransactionsComponent },
+          { path: 'budgets', component: BudgetsComponent }
         
       ]
     }
