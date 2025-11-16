@@ -1,0 +1,10 @@
+:host ::ng-deep .p-card-body {
+  padding-top: 1rem;
+}
+
+/* make selects full width */
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-toggleswitch {
+  width: 100%;
+}

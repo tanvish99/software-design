@@ -23,13 +23,22 @@
   <!-- Table -->
   <div class="bg-surface-0 rounded-xl shadow-sm p-3 md:p-4">
     <p-table
+      #dt2
       [value]="transactions"
       dataKey="id"
       [paginator]="true"
       [rows]="5"
       responsiveLayout="scroll"
-      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [globalFilterFields]="['type', 'category', 'amount', 'date', 'note']"
       class="w-full">
+
+      <ng-template #caption>
+            <div class="flex">
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+                </p-iconfield>
+            </div>
+        </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
