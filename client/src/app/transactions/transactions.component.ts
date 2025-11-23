@@ -6,23 +6,15 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';          // ✅ instead of DropdownModule
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePickerModule } from 'primeng/datepicker';  // ✅ instead of CalendarModule
+import { DatePickerModule } from 'primeng/datepicker';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
-
-export interface Transaction {
-  id: number;
-  type: 'INCOME' | 'EXPENSE';
-  category: string;
-  amount: number;
-  date: Date;
-  note?: string;
-}
+import { TransactionsService, TransactionDTO } from '../services/transactions.service';
 
 @Component({
   selector: 'app-transactions',
@@ -34,9 +26,9 @@ export interface Transaction {
     ButtonModule,
     DialogModule,
     InputTextModule,
-    SelectModule,        // ✅
+    SelectModule,
     InputNumberModule,
-    DatePickerModule,    // ✅
+    DatePickerModule,
     TagModule,
     ToastModule,
     ConfirmDialogModule
@@ -47,12 +39,12 @@ export interface Transaction {
 })
 export class TransactionsComponent implements OnInit {
 
-  transactions: Transaction[] = [];
+  transactions: TransactionDTO[] = [];
   transactionForm!: FormGroup;
 
   dialogVisible = false;
   dialogTitle = 'Add Transaction';
-  editingTransaction: Transaction | null = null;
+  editingTransaction: TransactionDTO | null = null;
 
   typeOptions = [
     { label: 'Income', value: 'INCOME' },
@@ -72,13 +64,14 @@ export class TransactionsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private transactionService: TransactionsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.loadSampleData();
+    this.loadTransactionsFromServer();
   }
 
   initForm(): void {
@@ -91,49 +84,19 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
-  loadSampleData(): void {
-    this.transactions = [
-      {
-        id: 1,
-        type: 'INCOME',
-        category: 'Salary',
-        amount: 2500,
-        date: new Date(2025, 0, 31),
-        note: 'Monthly salary'
+  // 🚀 Load from Backend
+  loadTransactionsFromServer(): void {
+    this.transactionService.getAll().subscribe({
+      next: (data) => {
+        this.transactions = data.map(t => ({
+          ...t,
+          date: this.fixLocalDate(t.date as unknown as string)
+        }));
       },
-      {
-        id: 2,
-        type: 'EXPENSE',
-        category: 'Rent',
-        amount: 900,
-        date: new Date(2025, 0, 1),
-        note: 'January rent'
-      },
-      {
-        id: 3,
-        type: 'EXPENSE',
-        category: 'Food',
-        amount: 120.5,
-        date: new Date(2025, 0, 5),
-        note: 'Groceries & eating out'
-      },
-      {
-        id: 4,
-        type: 'EXPENSE',
-        category: 'Transport',
-        amount: 60,
-        date: new Date(2025, 0, 7),
-        note: 'Bus pass'
-      },
-      {
-        id: 5,
-        type: 'INCOME',
-        category: 'Freelance',
-        amount: 300,
-        date: new Date(2025, 0, 15),
-        note: 'Side project'
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load transactions' });
       }
-    ];
+    });
   }
 
   openAddDialog(): void {
@@ -149,7 +112,7 @@ export class TransactionsComponent implements OnInit {
     this.dialogVisible = true;
   }
 
-  openEditDialog(transaction: Transaction): void {
+  openEditDialog(transaction: TransactionDTO): void {
     this.dialogTitle = 'Edit Transaction';
     this.editingTransaction = transaction;
     this.transactionForm.setValue({
@@ -168,39 +131,38 @@ export class TransactionsComponent implements OnInit {
       return;
     }
 
-    const formValue = this.transactionForm.value;
+    const form = this.transactionForm.value;
+
+    const payload = {
+      type: form.type,
+      category: form.category,
+      amount: form.amount,
+      date: form.date.toISOString().split('T')[0],  // YYYY-MM-DD
+      note: form.note
+    };
 
     if (this.editingTransaction) {
-      const index = this.transactions.findIndex(t => t.id === this.editingTransaction!.id);
-      if (index !== -1) {
-        this.transactions[index] = {
-          ...this.transactions[index],
-          ...formValue
-        };
-      }
-      this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Transaction updated successfully' });
+      // UPDATE
+      this.transactionService.update(this.editingTransaction.id, payload).subscribe({
+        next: (updated) => {
+          this.loadTransactionsFromServer();
+          this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Transaction updated successfully' });
+          this.dialogVisible = false;
+        }
+      });
     } else {
-      const newTransaction: Transaction = {
-        id: this.getNextId(),
-        type: formValue.type,
-        category: formValue.category,
-        amount: formValue.amount,
-        date: formValue.date,
-        note: formValue.note
-      };
-      this.transactions = [...this.transactions, newTransaction];
-      this.messageService.add({ severity: 'success', summary: 'Added', detail: 'Transaction added successfully' });
+      // CREATE
+      this.transactionService.create(payload).subscribe({
+        next: () => {
+          this.loadTransactionsFromServer();
+          this.messageService.add({ severity: 'success', summary: 'Added', detail: 'Transaction added successfully' });
+          this.dialogVisible = false;
+        }
+      });
     }
-
-    this.dialogVisible = false;
   }
 
-  getNextId(): number {
-    if (this.transactions.length === 0) return 1;
-    return Math.max(...this.transactions.map(t => t.id)) + 1;
-  }
-
-  confirmDelete(transaction: Transaction): void {
+  confirmDelete(transaction: TransactionDTO): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete this transaction?`,
       header: 'Delete Confirmation',
@@ -211,12 +173,22 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
-  deleteTransaction(transaction: Transaction): void {
-    this.transactions = this.transactions.filter(t => t.id !== transaction.id);
-    this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Transaction deleted successfully' });
+  deleteTransaction(transaction: TransactionDTO): void {
+    this.transactionService.delete(transaction.id).subscribe({
+      next: () => {
+        this.loadTransactionsFromServer();
+        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Transaction deleted successfully' });
+      }
+    });
   }
 
   getTypeSeverity(type: 'INCOME' | 'EXPENSE'): string {
     return type === 'INCOME' ? 'success' : 'danger';
   }
+
+  fixLocalDate(dateString: string): Date {
+  const parts = dateString.split('-'); // ["2025","01","15"]
+  // month is 0-based in JS
+  return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+}
 }

@@ -19,6 +19,26 @@ services:
       interval: 10s
       retries: 5
       start_period: 5s
+  
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    hostname: client
+    ports:
+      - "4200:80"
+    depends_on:
+      - server
+  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    hostname: server
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
 
 volumes:
   postgres-data:

@@ -34,3 +34,6 @@ yarn-debug.log*
 yarn-error.log*
 server/app/__pycache__/
 server/app/users/__pycache__/
+server/app/transactions/__pycache__/
+server/app/dashboard/__pycache__/
+server/app/budgets/__pycache__/

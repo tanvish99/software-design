@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from app.users.router import router as users_router
+from app.transactions.router import router as transactions_router
+from app.budgets.router import router as budgets_router
+from app.dashboard.router import router as dashboard_router
 from app.db import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -23,3 +26,6 @@ async def startup():
         await conn.run_sync(Base.metadata.create_all)
 
 app.include_router(users_router)
+app.include_router(transactions_router)
+app.include_router(budgets_router)
+app.include_router(dashboard_router)

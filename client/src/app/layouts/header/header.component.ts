@@ -41,11 +41,6 @@ export class HeaderComponent {
       label: 'Budgets',
       icon: 'pi pi-dollar',
       routerLink: '/budgets'
-    },
-    {
-      label: 'Settings',
-      icon: 'pi pi-cog',
-      routerLink: '/settings'
     }
   ];
 

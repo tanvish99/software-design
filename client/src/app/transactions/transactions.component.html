@@ -122,6 +122,7 @@
       <div class="flex flex-col gap-1">
         <label class="text-sm font-medium">Type</label>
         <p-select
+          appendTo="body"
           formControlName="type"
           [options]="typeOptions"
           optionLabel="label"
@@ -139,6 +140,7 @@
       <div class="flex flex-col gap-1">
         <label class="text-sm font-medium">Category</label>
         <p-select
+          appendTo="body"
           formControlName="category"
           [options]="categoryOptions"
           optionLabel="label"
@@ -172,8 +174,8 @@
 
         <div class="flex flex-col gap-1">
           <label class="text-sm font-medium">Date</label>
-          <!-- ✅ DatePicker for reactive forms -->
           <p-datepicker
+            appendTo="body"
             formControlName="date"
             [showIcon]="true"
             dateFormat="yy-mm-dd"

@@ -1,3 +1,7 @@
 :host ::ng-deep .p-card-body {
   padding-top: 1rem;
 }
+
+.p-progressbar .p-progressbar-value {
+  transition: width .4s ease, background-color .3s ease;
+}

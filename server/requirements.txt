@@ -5,3 +5,4 @@ fastapi-users-db-sqlalchemy
 sqlalchemy
 asyncpg
 python-dotenv
+python-dateutil

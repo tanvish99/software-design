@@ -5,8 +5,8 @@ import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
-
-import { Transaction } from '../../transactions/transactions.component';
+import { MessageService } from 'primeng/api';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,103 +18,139 @@ import { Transaction } from '../../transactions/transactions.component';
     TagModule,
     TableModule
   ],
+  providers: [MessageService, DashboardService],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 
-  transactions: Transaction[] = [];
-
+  // Summary values
   totalIncome = 0;
   totalExpense = 0;
   balance = 0;
 
+  // Charts
   pieData: any;
   pieOptions: any;
 
   barData: any;
   barOptions: any;
 
+  // Recent transactions
+  transactions: any[] = [];
+
+  loading = true;
+
+  constructor(
+    private dashboardService: DashboardService,
+    private messageService: MessageService
+  ) {}
+
   ngOnInit(): void {
-    this.loadSampleTransactions();
-    this.calculateSummary();
-    this.preparePieChart();
-    this.prepareBarChart();
+    this.initChartOptions();
+    this.loadDashboardData();
   }
 
-  loadSampleTransactions() {
-    this.transactions = [
-      { id: 1, type: 'INCOME',  category: 'Salary',     amount: 2500, date: new Date(2025,0,31), note: 'Monthly salary' },
-      { id: 2, type: 'EXPENSE', category: 'Rent',       amount: 900,  date: new Date(2025,0,1),  note: 'January rent' },
-      { id: 3, type: 'EXPENSE', category: 'Food',       amount: 300,  date: new Date(2025,0,14), note: 'Groceries' },
-      { id: 4, type: 'EXPENSE', category: 'Transport',  amount: 120,  date: new Date(2025,0,10), note: 'Bus pass' },
-      { id: 5, type: 'INCOME',  category: 'Freelance',  amount: 400,  date: new Date(2025,0,15), note: 'Side gig' }
-    ];
-  }
+  // ------------------------------------
+  // Load Dashboard Data
+  // ------------------------------------
+  loadDashboardData() {
+    this.loading = true;
 
-  calculateSummary() {
-    this.totalIncome = this.transactions
-      .filter(t => t.type === 'INCOME')
-      .reduce((sum, t) => sum + t.amount, 0);
+    Promise.all([
+      this.dashboardService.getSummary().toPromise(),
+      this.dashboardService.getRecentTransactions().toPromise(),
+      this.dashboardService.getCategoryExpense().toPromise(),
+      this.dashboardService.getMonthlyTrend().toPromise()
+    ])
+      .then(([summary, recent, catExpense, trend]) => {
+        
+        // Summary
+        this.totalIncome = summary.total_income;
+        this.totalExpense = summary.total_expense;
+        this.balance = summary.balance;
 
-    this.totalExpense = this.transactions
-      .filter(t => t.type === 'EXPENSE')
-      .reduce((sum, t) => sum + t.amount, 0);
+        // Recent
+        this.transactions = recent.map((t: any) => ({
+          ...t,
+          date: new Date(t.date)
+        }));
 
-    this.balance = this.totalIncome - this.totalExpense;
-  }
+        // Charts
+        this.preparePieChart(catExpense);
+        this.prepareBarChart(trend);
 
-  preparePieChart() {
-    const categories: any = {};
-    
-    this.transactions
-      .filter(t => t.type === 'EXPENSE')
-      .forEach(t => {
-        categories[t.category] = (categories[t.category] || 0) + t.amount;
+      })
+      .catch(() => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load dashboard data.'
+        });
+      })
+      .finally(() => {
+        this.loading = false;
       });
+  }
+
+  // ------------------------------------
+  // Pie Chart (Expenses by Category)
+  // ------------------------------------
+  preparePieChart(categoryData: any) {
+    const labels = Object.keys(categoryData);
+    const values = Object.values(categoryData);
 
     this.pieData = {
-      labels: Object.keys(categories),
+      labels,
       datasets: [
         {
-          data: Object.values(categories),
+          data: values
         }
       ]
-    };
-
-    this.pieOptions = {
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      },
-      responsive: true,
-      maintainAspectRatio: false
     };
   }
 
-  prepareBarChart() {
-    const months = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
-    const incomeData = [1700, 2000, 2200, 2500, 2600, 2500];
-    const expenseData = [900, 1100, 1000, 1200, 1300, 1320];
-
+  // ------------------------------------
+  // Bar Chart (Monthly Trend)
+  // ------------------------------------
+  prepareBarChart(trend: any) {
     this.barData = {
-      labels: months,
+      labels: trend.labels,
       datasets: [
-        { label: 'Income',  data: incomeData },
-        { label: 'Expenses', data: expenseData }
+        {
+          label: 'Income',
+          data: trend.income
+        },
+        {
+          label: 'Expenses',
+          data: trend.expense
+        }
       ]
+    };
+  }
+
+  // ------------------------------------
+  // Chart Options (UI only)
+  // ------------------------------------
+  initChartOptions() {
+    this.pieOptions = {
+      plugins: {
+        legend: { position: 'bottom' }
+      },
+      maintainAspectRatio: false,
+      responsive: true
     };
 
     this.barOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
       plugins: {
         legend: { position: 'bottom' }
-      }
+      },
+      maintainAspectRatio: false,
+      responsive: true
     };
   }
 
+  // UI helper for tags
   getSeverity(type: 'INCOME' | 'EXPENSE') {
     return type === 'INCOME' ? 'success' : 'danger';
   }
