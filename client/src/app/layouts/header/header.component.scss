@@ -5,3 +5,11 @@
 :host ::ng-deep .p-menuitem-link {
   font-size: 0.95rem;
 }
+
+:host ::ng-deep .p-overlaypanel {
+  padding: 0;
+}
+
+:host ::ng-deep .p-menu {
+  width: 160px;
+}

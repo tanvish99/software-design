@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+fastapi-users
+fastapi-users-db-sqlalchemy
+sqlalchemy
+asyncpg
+python-dotenv

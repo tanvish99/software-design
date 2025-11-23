@@ -27,6 +27,7 @@
     "chart.js": "4.4.2",
     "jspdf": "^3.0.3",
     "jspdf-autotable": "^5.0.2",
+    "jwt-decode": "^4.0.0",
     "primeicons": "latest",
     "primeng": "20.3.0",
     "quill": "2.0.2",

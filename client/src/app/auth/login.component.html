@@ -1,0 +1,38 @@
+<p-toast></p-toast>
+
+<div class="auth-container">
+
+  <div class="auth-box">
+
+    <h2 class="title">Login</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+
+  <div>
+    <label>Email</label>
+    <input pInputText type="email" formControlName="email" class="w-full" />
+  </div>
+
+  <div>
+    <label>Password</label>
+    <p-password
+      formControlName="password"
+      class="w-full"
+      [feedback]="false"
+      [toggleMask]="true"
+      [inputStyle]="{ width: '100%' }"
+    ></p-password>
+  </div>
+
+  <button pButton label="Login" class="w-full p-button-primary"></button>
+
+</form>
+
+    <div class="text-center mt-4 text-sm">
+      Don’t have an account?
+      <a routerLink="/register" class="link">Register</a>
+    </div>
+
+  </div>
+
+</div>

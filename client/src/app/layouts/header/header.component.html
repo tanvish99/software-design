@@ -1,6 +1,6 @@
 <p-menubar [model]="menuItems" class="shadow-sm">
 
-    <!-- App Logo / Branding -->
+    <!-- Branding -->
     <ng-template pTemplate="start">
         <div class="flex items-center gap-2 font-semibold text-lg">
             <i class="pi pi-wallet text-primary"></i>
@@ -8,10 +8,25 @@
         </div>
     </ng-template>
 
-    <!-- Right side Avatar -->
+    <!-- Avatar + Dropdown -->
     <ng-template pTemplate="end">
         <div class="flex items-center gap-3">
-            <p-avatar label="T" shape="circle" styleClass="bg-primary text-white"></p-avatar>
+
+            <!-- Avatar triggers menu -->
+            <p-avatar
+                label="T"
+                shape="circle"
+                styleClass="bg-primary text-white cursor-pointer"
+                (click)="userMenu.toggle($event)">
+            </p-avatar>
+
+            <!-- Popup Menu -->
+            <p-menu 
+                #userMenu 
+                [model]="userMenuItems" 
+                [popup]="true">
+            </p-menu>
+
         </div>
     </ng-template>
 

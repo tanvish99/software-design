@@ -1,13 +1,14 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { isDevMode } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { App } from './app/app';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
+import { AuthInterceptor } from './app/services/auth-interceptor';
 
   export const appConfig: ApplicationConfig = {
       providers: [
@@ -17,6 +18,7 @@ import { routes } from './app/app.routes';
       providePrimeNG({
           theme: { preset: Aura, options: { darkModeSelector: '.p-dark' } },
       }),
+      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
   };
 
