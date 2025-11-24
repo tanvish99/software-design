@@ -4,7 +4,14 @@
 
 /* make selects full width */
 :host ::ng-deep .p-select,
-:host ::ng-deep .p-inputnumber,
-:host ::ng-deep .p-toggleswitch {
+:host ::ng-deep .p-inputnumber {
   width: 100%;
+}
+
+/* compact toggle wrapper: use `.small-toggle` around the toggle to keep it small */
+:host ::ng-deep .small-toggle ::ng-deep .p-toggleswitch {
+  width: auto !important;
+  min-width: 2.25rem;
+  display: inline-block;
+  vertical-align: middle;
 }
