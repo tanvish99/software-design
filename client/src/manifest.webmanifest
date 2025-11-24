@@ -1,5 +1,5 @@
 {
-  "name": "PrimeNG AutocompleteBasicDemo",
+  "name": "Personal Finance Tracker",
   "short_name": "PrimeDemo",
   "start_url": "/",
   "scope": "/",
@@ -7,7 +7,7 @@
   "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
-  "description": "A Progressive Web App built with Angular and PrimeNG",
+  "description": "Manage your personal finances with ease",
   "icons": [
     {
       "src": "assets/icons/icon-192.svg",
