@@ -36,8 +36,8 @@
             <ng-template pTemplate="body" let-b>
                 <tr>
                     <td>{{ b.category }}</td>
-                    <td>${{ b.amount }}</td>
-                    <td>${{ b.spent }}</td>
+                    <td>{{ b.amount | dynamicCurrency }}</td>
+                    <td>{{ b.spent | dynamicCurrency }}</td>
 
                     <td class="w-64">
                         <p-progressBar 

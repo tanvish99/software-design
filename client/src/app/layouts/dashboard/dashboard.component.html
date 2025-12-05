@@ -18,21 +18,21 @@
         <p-card class="shadow-md">
             <div class="text-center">
                 <p class="text-sm text-muted-color">Total Income</p>
-                <p class="text-green-600 text-2xl font-bold mt-2">${{ totalIncome | number }}</p>
+                <p class="text-green-600 text-2xl font-bold mt-2">{{ totalIncome | dynamicCurrency }}</p>
             </div>
         </p-card>
 
         <p-card class="shadow-md">
             <div class="text-center">
                 <p class="text-sm text-muted-color">Total Expenses</p>
-                <p class="text-red-600 text-2xl font-bold mt-2">${{ totalExpense | number }}</p>
+                <p class="text-red-600 text-2xl font-bold mt-2">{{ totalExpense | dynamicCurrency }}</p>
             </div>
         </p-card>
 
         <p-card class="shadow-md">
             <div class="text-center">
                 <p class="text-sm text-muted-color">Balance</p>
-                <p class="text-primary text-2xl font-bold mt-2">${{ balance | number }}</p>
+                <p class="text-primary text-2xl font-bold mt-2">{{ balance | dynamicCurrency }}</p>
             </div>
         </p-card>
 
@@ -80,7 +80,7 @@
                             </p-tag>
                         </td>
                         <td>{{ t.category }}</td>
-                        <td>{{ t.amount | number:'1.2-2' }}</td>
+                        <td>{{ t.amount | dynamicCurrency }}</td>
                         <td>{{ t.date | date:'mediumDate' }}</td>
                         <td>{{ t.note }}</td>
                     </tr>

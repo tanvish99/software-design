@@ -63,7 +63,7 @@
           <td>{{ transaction.category }}</td>
 
           <td class="text-right font-medium">
-            {{ transaction.amount | number:'1.2-2' }}
+            {{ transaction.amount | dynamicCurrency }}
           </td>
 
           <td>

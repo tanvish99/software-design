@@ -15,6 +15,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TransactionsService, TransactionDTO } from '../services/transactions.service';
+import { CurrencyService } from '../services/currency.service';
+import { DynamicCurrencyPipe } from '../pipes/dynamic-currency.pipe';
 
 @Component({
   selector: 'app-transactions',
@@ -31,7 +33,8 @@ import { TransactionsService, TransactionDTO } from '../services/transactions.se
     DatePickerModule,
     TagModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DynamicCurrencyPipe
   ],
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss'],

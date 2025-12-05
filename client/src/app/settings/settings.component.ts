@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { ThemeSwitcher } from '../themeswitcher'; // 👈 adjust path
+import { CurrencyService } from '../services/currency.service';
 
 interface AppSettings {
   currency: string;
@@ -226,7 +227,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private currencyService: CurrencyService
   ) {}
 
   ngOnInit(): void {
@@ -248,7 +250,14 @@ export class SettingsComponent implements OnInit {
     const raw = localStorage.getItem(this.STORAGE_KEY);
     if (raw) {
       try {
-        return JSON.parse(raw) as AppSettings;
+        const parsed = JSON.parse(raw) as AppSettings;
+        
+        // Fix currency if it's stored as an object
+        if (typeof parsed.currency === 'object' && parsed.currency !== null) {
+          parsed.currency = (parsed.currency as any).value || 'USD';
+        }
+        
+        return parsed;
       } catch {
         // fall back to defaults if parsing fails
       }
@@ -256,7 +265,7 @@ export class SettingsComponent implements OnInit {
 
     // Defaults
     return {
-      currency: 'CAD',
+      currency: 'USD',
       dateFormat: 'yyyy-MM-dd',
       monthStartDay: 1,
       dashboardRange: 'THIS_MONTH',
@@ -271,7 +280,16 @@ export class SettingsComponent implements OnInit {
     }
 
     const value: AppSettings = this.settingsForm.value;
+    
+    // Ensure currency is a string, not an object
+    if (typeof value.currency === 'object' && value.currency !== null) {
+      value.currency = (value.currency as any).value || 'USD';
+    }
+    
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(value));
+
+    // Notify currency service of the change
+    this.currencyService.setCurrency(value.currency);
 
     this.messageService.add({
       severity: 'success',

@@ -8,6 +8,8 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { DashboardService } from '../../services/dashboard.service';
+import { CurrencyService } from '../../services/currency.service';
+import { DynamicCurrencyPipe } from '../../pipes/dynamic-currency.pipe';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -20,7 +22,8 @@ import autoTable from 'jspdf-autotable';
     CardModule,
     TagModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    DynamicCurrencyPipe
   ],
   providers: [MessageService, DashboardService],
   templateUrl: './dashboard.component.html',
@@ -48,13 +51,22 @@ export class DashboardComponent implements OnInit {
 
   loading = true;
 
+  currentCurrency = 'USD';
+
   constructor(
     private dashboardService: DashboardService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private currencyService: CurrencyService
   ) {}
 
   ngOnInit(): void {
     this.initChartOptions();
+    
+    // Subscribe to currency changes
+    this.currencyService.getCurrentCurrency().subscribe(currency => {
+      this.currentCurrency = currency;
+    });
+    
     this.loadDashboardData();
   }
 

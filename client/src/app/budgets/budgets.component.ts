@@ -14,6 +14,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { BudgetsService } from '../services/budgets.service';
+import { CurrencyService } from '../services/currency.service';
+import { DynamicCurrencyPipe } from '../pipes/dynamic-currency.pipe';
 
 export interface Budget {
   id: number;
@@ -36,7 +38,8 @@ export interface Budget {
     TableModule,
     ProgressBarModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DynamicCurrencyPipe
   ],
   templateUrl: './budgets.component.html',
   styleUrls: ['./budgets.component.scss'],
